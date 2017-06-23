@@ -35,7 +35,6 @@ const saveGeneratedFiles: SVGSpriter.CompileCallback = (err, result) => {
   Object.keys(result).forEach(mode => {
     Object.keys(result[mode]).forEach(file => {
       const filePath = result[mode][file].path
-
       writeFile(filePath, result[mode][file].contents)
         .then((response) => {
           console.log(colors.green('  generated file:'), filePath)
@@ -45,19 +44,19 @@ const saveGeneratedFiles: SVGSpriter.CompileCallback = (err, result) => {
   })
 }
 
-async function run() {
+async function run () {
   const args = argv.run()
   const outDir = path.join(cwd, args.options.out)
   const iconsDir: string = path.join(cwd, args.options.icons)
-  const typesFile = path.join(cwd, `${args.options.out}/icons.d.ts`)
+  const typesFilePath = path.join(cwd, `${args.options.out}/icons.d.ts`)
 
   const files = await getSvgFiles(iconsDir)
   console.log(`Generating svg sprite for ${colors.blue(`${files.length}`)} icons in`, colors.dim(iconsDir))
 
-  await compileIconTypes(typesFile, files)
+  await compileIconTypes(typesFilePath, files)
 
   const spriter = new SVGSpriter({
-    outDir,
+    dest: outDir,
     shape: {
       spacing: {
         padding: 1,
@@ -75,6 +74,7 @@ async function run() {
       },
     },
   })
+
   files.forEach(file => {
     const svgPath = `${iconsDir}/${file}`
     spriter.add(path.resolve(svgPath), file, fs.readFileSync(svgPath).toString())
@@ -83,7 +83,7 @@ async function run() {
   spriter.compile(saveGeneratedFiles)
 }
 
-function writeFile(filePath: string, content: string) {
+function writeFile (filePath: string, content: string) {
   return new Promise((resolve, reject) => {
     mkdirp.sync(path.dirname(filePath))
     fs.writeFile(filePath, content, (err: any, response: any) => {
@@ -95,7 +95,7 @@ function writeFile(filePath: string, content: string) {
   })
 }
 
-function getSvgFiles(iconsDir: string): Promise<string[]> {
+function getSvgFiles (iconsDir: string): Promise<string[]> {
   return new Promise((resolve, reject) => {
     glob(`**/*.svg`, { cwd: iconsDir }, (err, files) => {
       if (err) {
@@ -106,7 +106,7 @@ function getSvgFiles(iconsDir: string): Promise<string[]> {
   })
 }
 
-function compileIconTypes(typesFile: string, files: string[]) {
+function compileIconTypes (typesFilePath: string, files: string[]) {
   const typeDefinition = files
     .map(file => '\'' + file.replace('.svg', '') + '\'')
     .join(' |\n  ')
@@ -116,8 +116,8 @@ function compileIconTypes(typesFile: string, files: string[]) {
   ${typeDefinition}
 }
 `
-  return writeFile(typesFile, content)
-    .then(() => console.log(colors.green(`Icon types written to:`), colors.green(typesFile)))
+  return writeFile(typesFilePath, content)
+    .then(() => console.log(colors.green(`Icon types written to:`), colors.green(typesFilePath)))
 }
 
 run()
