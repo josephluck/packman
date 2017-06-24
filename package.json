@@ -1,7 +1,7 @@
 {
-  "name": "packman-css",
+  "name": "packman",
   "version": "4.0.0",
-  "description": "generate atomic css",
+  "description": "Generate an icon sprite from SVGs",
   "main": "lib/index.js",
   "files": [
     "bin",

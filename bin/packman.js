@@ -49,14 +49,14 @@ argv.option({
     short: 'i',
     type: 'string',
     description: 'The relative path to the directory containing your SVG icons',
-    example: "'packmule --i=./icons' or 'packmule -i ./icons'"
+    example: "'packman --i=./icons' or 'packman -i ./icons'"
 });
 argv.option({
     name: 'out',
     short: 'o',
     type: 'string',
     description: 'The relative path to the output directory of the CSS and SVG sprite',
-    example: "'packmule --o=./assets/icons' or 'packmule -i ./assets/icons'"
+    example: "'packman --o=./assets/icons' or 'packman -i ./assets/icons'"
 });
 var saveGeneratedFiles = function (err, result) {
     if (err) {

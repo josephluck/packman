@@ -15,7 +15,7 @@ argv.option({
   short: 'i',
   type: 'string',
   description: 'The relative path to the directory containing your SVG icons',
-  example: "'packmule --i=./icons' or 'packmule -i ./icons'",
+  example: "'packman --i=./icons' or 'packman -i ./icons'",
 })
 
 argv.option({
@@ -23,7 +23,7 @@ argv.option({
   short: 'o',
   type: 'string',
   description: 'The relative path to the output directory of the CSS and SVG sprite',
-  example: "'packmule --o=./assets/icons' or 'packmule -i ./assets/icons'",
+  example: "'packman --o=./assets/icons' or 'packman -i ./assets/icons'",
 })
 
 const saveGeneratedFiles: SVGSpriter.CompileCallback = (err, result) => {
@@ -44,7 +44,7 @@ const saveGeneratedFiles: SVGSpriter.CompileCallback = (err, result) => {
   })
 }
 
-async function run () {
+async function run() {
   const args = argv.run()
   const outDir = path.join(cwd, args.options.out)
   const iconsDir: string = path.join(cwd, args.options.icons)
@@ -83,7 +83,7 @@ async function run () {
   spriter.compile(saveGeneratedFiles)
 }
 
-function writeFile (filePath: string, content: string) {
+function writeFile(filePath: string, content: string) {
   return new Promise((resolve, reject) => {
     mkdirp.sync(path.dirname(filePath))
     fs.writeFile(filePath, content, (err: any, response: any) => {
@@ -95,7 +95,7 @@ function writeFile (filePath: string, content: string) {
   })
 }
 
-function getSvgFiles (iconsDir: string): Promise<string[]> {
+function getSvgFiles(iconsDir: string): Promise<string[]> {
   return new Promise((resolve, reject) => {
     glob(`**/*.svg`, { cwd: iconsDir }, (err, files) => {
       if (err) {
@@ -106,7 +106,7 @@ function getSvgFiles (iconsDir: string): Promise<string[]> {
   })
 }
 
-function compileIconTypes (typesFilePath: string, files: string[]) {
+function compileIconTypes(typesFilePath: string, files: string[]) {
   const typeDefinition = files
     .map(file => '\'' + file.replace('.svg', '') + '\'')
     .join(' |\n  ')
